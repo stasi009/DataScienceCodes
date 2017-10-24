@@ -70,23 +70,23 @@ def get_loss(x, y_, regularizer, scope):
     loss = cross_entropy + regularization_loss
     return loss
 
-    # 计算每一个变量梯度的平均值。
-    def average_gradients(tower_grads):
-      average_grads = []
-      # 枚举所有的变量和变量在不同GPU上计算得出的梯度。
-      for grad_and_vars in zip(*tower_grads):
-          # 计算所有GPU上的梯度平均值。
-          grads = []
-          for g, _ in grad_and_vars:
-              expanded_g = tf.expand_dims(g, 0)
-              grads.append(expanded_g)
-          grad = tf.concat(0, grads)
-          grad = tf.reduce_mean(grad, 0)
+# 计算每一个变量梯度的平均值。
+def average_gradients(tower_grads):
+  average_grads = []
+  # 枚举所有的变量和变量在不同GPU上计算得出的梯度。
+  for grad_and_vars in zip(*tower_grads):
+      # 计算所有GPU上的梯度平均值。
+      grads = []
+      for g, _ in grad_and_vars:
+          expanded_g = tf.expand_dims(g, 0)
+          grads.append(expanded_g)
+      grad = tf.concat(0, grads)
+      grad = tf.reduce_mean(grad, 0)
 
-          v = grad_and_vars[0][1]
-          grad_and_var = (grad, v)
-          # 将变量和它的平均梯度对应起来。
-          average_grads.append(grad_and_var)
+      v = grad_and_vars[0][1]
+      grad_and_var = (grad, v)
+      # 将变量和它的平均梯度对应起来。
+      average_grads.append(grad_and_var)
     # 返回所有变量的平均梯度，这将被用于变量更新。
     return average_grads
 
