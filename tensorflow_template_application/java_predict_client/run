@@ -1,0 +1,10 @@
+#!/bin/bash 
+
+set -x 
+set -e
+
+mvn clean install -DskipTests
+
+mvn exec:java -Dexec.mainClass="com.tobe.PredictClient" -Dexec.args="127.0.0.1 9000 cancer 1"
+
+mvn compile exec:java -Dexec.mainClass="com.tobe.SparsePredictClient" -Dexec.args="127.0.0.1 9000 sparse 1"
