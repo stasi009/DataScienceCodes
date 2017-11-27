@@ -6,8 +6,8 @@ from tensorflow_serving.apis import predict_pb2
 from tensorflow_serving.apis import prediction_service_pb2
 
 tf.app.flags.DEFINE_string("host", "gpu03", "gRPC server host")
-tf.app.flags.DEFINE_integer("port", 9000, "gRPC server port")
-tf.app.flags.DEFINE_string("model_name", "magic_model", "TensorFlow model name")
+tf.app.flags.DEFINE_integer("port", 8500, "gRPC server port")
+tf.app.flags.DEFINE_string("model_name", "default", "TensorFlow model name")
 tf.app.flags.DEFINE_integer("model_version", -1, "TensorFlow model version")
 tf.app.flags.DEFINE_float("request_timeout", 10.0, "Timeout of gRPC request")
 FLAGS = tf.app.flags.FLAGS
@@ -30,8 +30,11 @@ def main():
     # Create gRPC client and request
     channel = implementations.insecure_channel(host, port)
     stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
+
     request = predict_pb2.PredictRequest()
     request.model_spec.name = model_name
+    request.model_spec.signature_name = 'magic_model'
+
     if model_version > 0:
         request.model_spec.version.value = model_version
     request.inputs['egg'].CopyFrom(egg_tensor_proto)
