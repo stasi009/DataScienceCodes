@@ -42,7 +42,30 @@ def main():
 
     # Send request
     result = stub.Predict(request, request_timeout)
-    print result
+
+    # tensorflow_serving.apis.predict_pb2.PredictResponse
+    print type(result)
+
+    """
+    outputs {
+      key: "spam"
+      value {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 3
+          }
+        }
+        float_val: 11.0
+        float_val: 15.4000005722
+        float_val: 19.7999992371
+      }
+    }
+    """
+    # print result
+
+    # result.outputs['spam'].float_val is a list
+    print result.outputs['spam'].float_val
 
 
 if __name__ == '__main__':
